@@ -23,6 +23,7 @@ class StartScene: SKScene, GKGameCenterControllerDelegate {
     let titleNode = SKLabelNode(text: "Curveball")
     var startLabel:SKLabelNode = SKLabelNode()
     let highScoreLabel = SKLabelNode(text: "Highscore: " + String(variables.highScore))
+    let hardHighScoreLabel = SKLabelNode(text: "Hard Highscore: " + String(variables.highScoreHard))
     let gemsNode = SKLabelNode(text: String(variables.gems))
     let gemSprite = SKSpriteNode(imageNamed: "GemOpaque")
     var leaderboardButton:SKSpriteNode = SKSpriteNode()
@@ -41,8 +42,8 @@ class StartScene: SKScene, GKGameCenterControllerDelegate {
         print(scene?.size.width)
         print(view.bounds.size.width)
         print(scene!.view!.bounds.size.width)
-        let leaderboardID = "grp.curveballhighscore"
-        let sScore = GKScore(leaderboardIdentifier: leaderboardID)
+        var leaderboardID = "grp.curveballhighscore"
+        var sScore = GKScore(leaderboardIdentifier: leaderboardID)
         sScore.value = Int64(variables.highScore)
         
         let localPlayer: GKLocalPlayer = GKLocalPlayer.localPlayer()
@@ -55,6 +56,22 @@ class StartScene: SKScene, GKGameCenterControllerDelegate {
                 
             }
         } as! (Error?) -> Void)
+        }
+        
+        leaderboardID = "grp.curveballhighscorehard"
+        sScore = GKScore(leaderboardIdentifier: leaderboardID)
+        sScore.value = Int64(variables.highScoreHard)
+        
+        
+        if(localPlayer.isAuthenticated){
+            GKScore.report([sScore], withCompletionHandler: { (error: Error?) -> Void in
+                if error != nil {
+                    // print(error!.localizedDescription)
+                } else {
+                    //print("Score submitted")
+                    
+                }
+                } as! (Error?) -> Void)
         }
         /*var decoder = NSKeyedUnarchiver(forReadingWithData: NSData())
         var coder = NSKeyedArchiver(forWritingWithMutableData: NSMutableData())
@@ -92,6 +109,12 @@ class StartScene: SKScene, GKGameCenterControllerDelegate {
         gemSprite.yScale=gemSprite.xScale
         gemSprite.position = CGPoint(x: CGFloat(Double(gemsNode.frame.width+10+15)), y: CGFloat(screenHeight-Double(gemsNode.frame.height/2+10)))
 
+        
+        hardHighScoreLabel.fontSize = 20
+        hardHighScoreLabel.fontName = "Arial-Bold"
+        hardHighScoreLabel.verticalAlignmentMode = .center
+        hardHighScoreLabel.horizontalAlignmentMode = .left
+        hardHighScoreLabel.position = CGPoint(x: gemSprite.frame.maxX+20, y: highScoreLabel.position.y)
         
         startLabel = SKLabelNode(text: "Start")
         startLabel.fontSize=20
@@ -218,6 +241,7 @@ class StartScene: SKScene, GKGameCenterControllerDelegate {
         self.addChild(aboutButton)
         self.addChild(leaderboardButton)
         self.addChild(hardButton)
+        self.addChild(hardHighScoreLabel)
 //        self.addChild(note1)
   //      self.addChild(note2)
         self.addChild(rateButton)
