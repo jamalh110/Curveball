@@ -233,7 +233,7 @@ class GameOverHard: SKScene {
                 if(menuButton.parent != self){
                     self.addChild(menuButton)
                 }
-            }
+            } 
             else if(retryButtonPushed.parent==self){
                 retryButtonPushed.removeFromParent()
                 if(retryButton.parent != self){
